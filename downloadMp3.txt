@@ -1,0 +1,27 @@
+import selenium
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+import time
+import urllib.request
+import requests
+
+PATH = 'home/kali/Documents/chromedriver.exe'
+driver = webdriver.Chrome(PATH)
+driver.get("file:///home/kali/Desktop/HandleDownloading%20image/html.html")
+
+#url = 'https://www.facebook.com/favicon.ico'
+#r = requests.get(url, allow_redirects=True)
+
+
+video = driver.find_element(By.XPATH, "/html/body/video/source")
+video_url = video.get_property('src')
+
+print(str(video_url))
+urllib.request.urlretrieve(video_url, 'videoname.mp4')
+print('1')
+time.sleep(60)
+aLink.click()
+aLink.remove()
+time.sleep(260)
+driver.quit()
