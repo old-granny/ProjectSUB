@@ -1,0 +1,94 @@
+import speech_recognition as sr
+
+from moviepy.editor import AudioFileClip
+
+
+
+
+
+def mp4ToWaf(mp4Audio):
+
+    wav_filename = "example.wav"
+
+    clip = AudioFileClip(mp4Audio)
+
+    clip.write_audiofile(wav_filename)
+
+    clip.close()
+
+    return wav_filename
+
+
+
+
+
+
+
+def AudioFileToStringSpeesh(mp4Audio):
+
+    nomFile = mp4ToWaf(mp4Audio)
+
+    r = sr.Recognizer()
+
+    # r.recognize_google()
+
+    audio_file = sr.AudioFile(nomFile)
+
+    with audio_file as source:
+
+        audio = r.record(source)
+
+    texte = r.recognize_google(audio_data=audio)
+
+    return texte
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+""""
+
+# Use the recognizer to recognize speech in the audio file
+
+with audio_file as source:
+
+    audio = r.record(source)
+
+
+
+# Perform speech recognition
+
+try:
+
+    sr.Recognizer
+
+    text = r.record
+
+    print("Transcription: " + text)
+
+except sr.UnknownValueError:
+
+    print("Speech recognition could not understand audio")
+
+except sr.RequestError as e:
+
+    print("Could not request results from Google Speech Recognition service; {0}".format(e))
+
+"""
+

@@ -1,0 +1,124 @@
+from selenium.webdriver.common.by import By
+
+from selenium.webdriver.support.select import Select
+
+
+
+from Algos import VirtualClick
+
+
+
+
+
+def HandleEmailField(driver, email):
+
+    emailField = driver.find_element(By.CSS_SELECTOR, ".email-alias-input__alias-input")
+
+    emailField.send_keys(email)
+
+
+
+
+
+def HandleGender(driver, gender):
+
+    if gender == 'M':
+
+        genderRaidoBox = driver.find_elements(By.NAME, "salutation")[1]
+
+    else:
+
+        genderRaidoBox = driver.find_elements(By.NAME, "salutation")[0]
+
+    driver.execute_script("arguments[0].click();", genderRaidoBox)
+
+
+
+
+
+def HandleLastName(driver, lastName):
+
+    labelForLastName = driver.find_element(By.XPATH, "/html/body/onereg-app/div/onereg-form/div/div/form/section/section[3]/onereg-progress-meter/onereg-personal-info/fieldset/onereg-form-row[2]/div/label").get_attribute('for')
+
+    LastNameInput = driver.find_element(By.ID, str(labelForLastName))
+
+    LastNameInput.send_keys(lastName)
+
+
+
+
+
+def HandleFirstName(driver, firstName):
+
+    labelForFirstName = driver.find_element(By.XPATH, "/html/body/onereg-app/div/onereg-form/div/div/form/section/section[3]/onereg-progress-meter/onereg-personal-info/fieldset/onereg-form-row[1]/div/label").get_attribute('for')
+
+    print(labelForFirstName)
+
+    FirstNameInput = driver.find_element(By.ID, str(labelForFirstName))
+
+    FirstNameInput.send_keys(firstName)
+
+
+
+def handleCountry(driver, contry):
+
+    labelForCountry = driver.find_elements(By.XPATH, "/html/body/onereg-app/div/onereg-form/div/div/form/section/section[3]/onereg-progress-meter/onereg-personal-info/fieldset/fieldset/onereg-form-row[1]/div/label")[0].get_attribute('for')
+
+    Country = Select(driver.find_element(By.ID, str(labelForCountry)))
+
+    Country.select_by_value(contry)
+
+
+
+def HandleBirthDay(driver, month, day, year):
+
+    monthInput = driver.find_element(By.CSS_SELECTOR, ".pos-dob--mm")
+
+    monthInput.send_keys(month)
+
+    yearInput = driver.find_element(By.CSS_SELECTOR, ".pos-dob--dd")
+
+    yearInput.send_keys(day)
+
+    dayInput = driver.find_element(By.CSS_SELECTOR, ".pos-dob--yyyy")
+
+    dayInput.send_keys(year)
+
+
+
+
+
+def HandleCheckBox(driver, emailDeRecuperation):
+
+    phoneCheckBox = driver.find_element(By.NAME, "mobile-phone-checkbox")
+
+    phoneCheckBox.click()
+
+    emailCheclBox = driver.find_element(By.NAME, "contact-email-checkbox")
+
+    emailCheclBox.click()
+
+    emailInput = driver.find_element(By.ID, "contactEmail")
+
+    emailInput.send_keys(emailDeRecuperation)
+
+
+
+
+
+def HandlePasswords(driver, password):
+
+    passwordInput = driver.find_element(By.ID, "password")
+
+    passwordInput.send_keys(password)
+
+    repeatPasswordInput = driver.find_element(By.ID, "confirm-password")
+
+    repeatPasswordInput.send_keys(password)
+
+def HandleRecatchaAnswer(driver, answer):
+
+    driver.find_element(By.ID, "audio-response").send_keys(answer)#Il manque le input pour le reponse
+
+    VirtualClick(driver, driver.find_element("recaptcha-verify-button"))#Il manque le submit button pour le recaptcha
+

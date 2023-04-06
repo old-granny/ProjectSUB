@@ -1,0 +1,30 @@
+import selenium
+
+from selenium import webdriver
+
+from selenium.webdriver.common.keys import Keys
+
+from selenium.webdriver.common.by import By
+
+import time
+
+import urllib.request
+
+import requests
+
+
+
+def getmp4(driver):
+
+    driver.switch_to.window(driver.window_handles[1])
+
+    video = driver.find_element(By.XPATH, "/html/body/video/source")
+
+    video_url = video.get_property('src')
+
+    urllib.request.urlretrieve(video_url, 'videoname.mp4')
+
+    driver.close()
+
+    driver.switch_to.window(driver.window_handles[0])
+

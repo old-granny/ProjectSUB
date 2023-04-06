@@ -1,0 +1,160 @@
+import os
+
+import random
+
+import time
+
+
+
+from selenium.common import MoveTargetOutOfBoundsException
+
+from selenium.webdriver import ActionChains
+
+
+
+
+
+def VerifierClick(driver, element):
+
+    driver.execute_script(
+
+        "var ele = arguments[0];ele.addEventListener('click', function() {ele.setAttribute('automationTrack','true');});",
+
+        element)
+
+    print(element.get_attribute("automationTrack"))
+
+    return (element.get_attribute("automationTrack"))
+
+
+
+
+
+def VirtualClick(driver, element):
+
+    time.sleep(1)
+
+    height = (random.randint(1, int(element.size['height'])) / 2) - 1
+
+    width = (random.randint(1, int(element.size['width'])) / 2) - 1
+
+    try:
+
+        # move cursor to element and click
+
+        # print(height, width)
+
+        action = ActionChains(driver).move_to_element_with_offset(element, width, height)
+
+        action.click()
+
+        action.perform()
+
+    except MoveTargetOutOfBoundsException:
+
+        # if cursor goes out of bounds, recursively call the function
+
+        # print('out of bound')
+
+        VirtualClick(driver, element)
+
+
+
+
+
+def delete_file(file_path):
+
+    try:
+
+        os.remove(file_path)
+
+        print(f"{file_path} has been deleted.")
+
+    except OSError as e:
+
+        print(f"Error deleting {file_path}: {e}")
+
+
+
+
+
+"""""
+
+def VirtualClick(driver, click_object, UseRandom=True):
+
+    try:
+
+        size = click_object.size
+
+        print(size)
+
+    except StaleElementReferenceException:
+
+        print("StaleElementReferenceException")
+
+        return False
+
+    sizeList = list(size.values())
+
+    height = int(sizeList[0])-10
+
+    width = int(sizeList[1])-10
+
+    if UseRandom == True:
+
+        try:
+
+            height_rand = random.randint(1,height)
+
+        except ValueError:
+
+            height_rand = 1
+
+        try:
+
+            width_rand = random.randint(1,width)
+
+        except ValueError:
+
+            width_rand = 1
+
+    if UseRandom == False:
+
+        height_rand = height
+
+        width_rand = width
+
+    action = webdriver.common.action_chains.ActionChains(driver)
+
+    try:
+
+        action.move_to_element_with_offset(click_object, width_rand, height_rand)
+
+    except StaleElementReferenceException:
+
+        return False
+
+    action.click()
+
+    try:
+
+        print("performed")
+
+        action.perform()
+
+    except MoveTargetOutOfBoundsException:
+
+        print("MoveTargetOutOfBoundsException with action.perform()")
+
+        return False
+
+    except StaleElementReferenceException:
+
+        print("StaleElementReferenceException with action.perform()")
+
+        return False
+
+    return True
+
+"""""
+

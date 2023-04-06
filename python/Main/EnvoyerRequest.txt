@@ -1,0 +1,212 @@
+from selenium_stealth import stealth
+
+
+
+from selenium.webdriver.common.by import By
+
+from selenium.webdriver.support.ui import Select
+
+from selenium.webdriver.support.ui import WebDriverWait
+
+from selenium.webdriver.support import expected_conditions as EC
+
+from selenium import webdriver
+
+from selenium.webdriver.chrome.options import Options
+
+from selenium.webdriver.chrome.service import Service
+
+from selenium.common.exceptions import TimeoutException, NoSuchElementException, InvalidSelectorException
+
+from selenium.webdriver.common.action_chains import ActionChains
+
+
+
+
+
+import time
+
+import urllib.request
+
+
+
+from Algos import VerifierClick
+
+from Getmp4audio import getmp4
+
+from HandleFields import HandleRecatchaAnswer
+
+from reCaptchaSolver import reCaptchaSolver
+
+
+
+PATH = "/home/kali/Documents/chromedriver"
+
+
+
+linkMail = "https://www.mail.com/"
+
+email = "ljohnson9925"
+
+gender = 'M'
+
+lastName = "Lucas"
+
+firstName = "Johnson"
+
+contry = 'CA'
+
+month = "01"
+
+year = "1990"
+
+day = "21"
+
+password = "password"
+
+emailDeRecuperation = "leomitron@gmail.com"
+
+
+
+watingTime = 4
+
+
+
+
+
+
+
+def GoToSignupPage():
+
+    options = Options()
+
+    options.add_argument("start-maximized")
+
+    options.add_argument('--disable-blink-features=AutomationControlled')
+
+
+
+    # Chrome is controlled by automated test software
+
+    options.add_experimental_option("excludeSwitches", ["enable-automation"])
+
+    options.add_experimental_option('useAutomationExtension', False)
+
+    options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.101 Safari/537.36")
+
+
+
+
+
+    s = Service('/home/kali/Documents/chromedriver')
+
+    driver = webdriver.Chrome(service=s, options=options)
+
+
+
+    # Selenium Stealth settings
+
+    stealth(driver,
+
+            languages=["en-US", "en"],
+
+            vendor="Google Inc.",
+
+            platform="Win32",
+
+            webgl_vendor="Intel Inc.",
+
+            renderer="Intel Iris OpenGL Engine",
+
+            fix_hairline=True,
+
+            )
+
+
+
+    driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
+
+        "source":
+
+            "const newProto = navigator.__proto__;"
+
+            "delete newProto.webdriver;"
+
+            "navigator.__proto__ = newProto;"
+
+    })
+
+    driver.set_page_load_timeout(45)
+
+    try:
+
+        driver.delete_all_cookies()
+
+        driver.get("https://www.mail.com")
+
+        driver.delete_all_cookies()
+
+    except TimeoutException:
+
+        driver.execute_script("window.stop();")
+
+
+
+    print('0')
+
+    time.sleep(4.5)
+
+    link = driver.find_element(By.ID, "signup-button")
+
+    time.sleep(2)
+
+    link.click()
+
+    return driver
+
+
+
+
+
+
+
+time.sleep(watingTime)
+
+driver = GoToSignupPage()
+
+
+
+
+
+
+
+driver.delete_all_cookies()
+
+time.sleep(10)
+
+answer = reCaptchaSolver(driver)
+
+
+
+
+
+time.sleep(5)
+
+HandleRecatchaAnswer(driver, answer)
+
+
+
+
+
+
+
+
+
+
+
+
+
+time.sleep(120)
+
+driver.quit()
+

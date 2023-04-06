@@ -1,0 +1,167 @@
+import time
+
+
+
+from selenium.common import InvalidSelectorException, TimeoutException, StaleElementReferenceException
+
+from selenium.webdriver.chrome import webdriver
+
+from selenium.webdriver.common.by import By
+
+from selenium.webdriver.support.wait import WebDriverWait
+
+from selenium.webdriver.support import expected_conditions as EC
+
+
+
+
+
+from Algos import VerifierClick, VirtualClick, delete_file
+
+from Getmp4audio import getmp4
+
+from VoiceRecognition import AudioFileToStringSpeesh
+
+
+
+
+
+def reCaptchaSolver(driver):
+
+    time.sleep(5)
+
+    recaptcha_element = WebDriverWait(driver, 10).until(
+
+        EC.presence_of_element_located((By.XPATH, "//iframe[contains(@src, 'recaptcha/api2')]")))
+
+
+
+    driver.switch_to.frame(recaptcha_element)
+
+
+
+    recaptcha_checkbox = WebDriverWait(driver, 10).until(
+
+        EC.element_to_be_clickable((By.XPATH, "//div[@class='recaptcha-checkbox-border']")))
+
+    VirtualClick(driver, recaptcha_checkbox)
+
+
+
+    time.sleep(3)
+
+    driver.switch_to.default_content()
+
+
+
+
+
+    time.sleep(1)
+
+    try:
+
+        recaptcha_Audio_Iframe = WebDriverWait(driver, 10).until(
+
+            EC.presence_of_element_located((By.CSS_SELECTOR, "body > div:nth-child(16) > div:nth-child(4) > iframe")))
+
+        driver.switch_to.frame(recaptcha_Audio_Iframe)
+
+    except InvalidSelectorException:
+
+        try:
+
+            driver.switch_to.frame(recaptcha_element)
+
+        except StaleElementReferenceException:
+
+            recaptcha_element = driver.find_element_by_xpath("//iframe[contains(@src, 'recaptcha/api2')]")
+
+            driver.switch_to.frame(recaptcha_element)
+
+
+
+    except TimeoutException:
+
+        try:
+
+            driver.switch_to.frame(recaptcha_element)
+
+        except StaleElementReferenceException:
+
+            recaptcha_element = driver.find_element_by_xpath("//iframe[contains(@src, 'recaptcha/api2')]")
+
+            driver.switch_to.frame(recaptcha_element)
+
+
+
+
+
+
+
+    time.sleep(1)
+
+    audioButton = WebDriverWait(driver, 10).until(
+
+        EC.element_to_be_clickable((By.ID, "recaptcha-audio-button")))
+
+
+
+
+
+    count = 0
+
+    while (VerifierClick(driver, audioButton) == None):
+
+        time.sleep(count)
+
+        VirtualClick(driver, audioButton)
+
+        if (count > 5):
+
+            break
+
+        count = count + 1
+
+    try:
+
+        audioDownloadButton = WebDriverWait(driver, 10).until(
+
+            EC.element_to_be_clickable((By.XPATH, "//*[@id=\"rc-audio\"]/div[7]/a")))
+
+    except TimeoutException:
+
+        print("TimeoutException")
+
+        audioDownloadButton = driver.find_element(By.XPATH, "//*[@id=\"rc-audio\"]/div[7]/a")
+
+    time.sleep(2)
+
+    temps = 1
+
+    while(VerifierClick(driver, audioDownloadButton) == None):
+
+        time.sleep(temps)
+
+        VirtualClick(driver, audioDownloadButton)
+
+        if temps > 4:
+
+            break
+
+        temps = temps +1
+
+    time.sleep(3)
+
+    getmp4(driver)
+
+    time.sleep(2)
+
+    driver.switch_to.frame(recaptcha_element)
+
+    recaptchaAnswer = AudioFileToStringSpeesh("videoname.mp4")
+
+    delete_file("videoname.mp4")
+
+    delete_file("example.wav")
+
+    return recaptchaAnswer
