@@ -14,7 +14,7 @@ import time
 
 def RecScreen(nomFichier):
     try:
-        PATH = '/path/to/chromedriver'  # update this to the correct path
+        PATH = '/home/kali/Documents/chromedriver'  # update this to the correct path
         driver = webdriver.Chrome(PATH)
         driver.get("https://patrickhlauke.github.io/recaptcha/")
         #driver.get("file:///home/kali/Desktop/SelinumProjectCreationDataSet/testingClicking.html")

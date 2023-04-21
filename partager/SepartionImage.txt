@@ -1,0 +1,118 @@
+from PIL import Image
+import numpy as np
+import traceback
+import pytesseract
+import os
+import shutil
+
+def ImageToSeparation(image, options):
+    import matplotlib.pyplot as plt
+    try:
+        pil_image = Image.open(image)
+        ImagesRecarder = [
+            pil_image.crop((70, 20, 453, 130)), #sorte
+            pil_image.crop((67, 140, 196,265)), # image1
+            pil_image.crop((200, 140, 323, 265)), #image2
+            pil_image.crop((330, 140, 453, 265)), #image3
+            pil_image.crop((67, 271, 196, 393)), #image4
+            pil_image.crop((200, 271, 323, 393)), #image5
+            pil_image.crop((330, 271, 453, 393)), #image6
+            pil_image.crop((67,400, 196, 527)), #image7
+            pil_image.crop((200, 400, 323, 527)), #image8
+            pil_image.crop((330, 400, 453, 527))  # image8
+        ]
+
+        ImagesRecarder[0].save('nom.png')
+        tip , rechercher = find_word_in_string(ImgToTexte("nom.png"))
+        index = FindIndex(str(tip) + str(rechercher), options)
+        nomImage = ForLoop(index, len(ImagesRecarder), ImagesRecarder, options)
+
+
+        numpy_array = np.array(pil_image)
+        plt.imshow(numpy_array)
+        plt.show()
+        imgf = nomImage
+        err = 1
+    except Exception as e:
+        traceback.print_exc()
+        return "" , -1
+    if(err == -1):
+        exit()
+    else:
+        if(tip == "squares"):
+            HandleSiSquares(image)
+        else:
+            ImageToDirectories(nomImage)
+    return imgf , err
+
+
+def ImageToDirectories(files):
+    if not isinstance(files, list) or not all(isinstance(f, str) for f in files):
+        raise ValueError("Expected a list of file paths")
+
+    nomDir = ImgToTexte(Image.open(files[0]))
+    print(nomDir + "nomdir")
+    dir_path = '/home/kali/Desktop/ProjetSubsciber/TensorFlow/CreatingDataSet/dataSets/'
+    if not os.path.exists(os.path.join(dir_path, nomDir)):
+        os.makedirs(os.path.join(dir_path, nomDir))
+    dest_dir = os.path.join(dir_path, nomDir)
+    for file in files[1:]:
+        # Check if the file is a regular file (not a directory)
+        if os.path.isfile(file):
+            # Move the file to the destination directory
+            shutil.move(file, dest_dir)
+    if os.path.exists('0.png'):
+        os.remove('0.png')
+    if os.path.exists('nom.png'):
+        os.remove('nom.png')
+
+
+
+def ImgToTexte(img):
+    s = pytesseract.image_to_string(img)
+    kind , recherche = find_word_in_string(s.split())
+    dirr = str(kind) + str(recherche)
+    return dirr
+
+def find_word_in_string(input_string):
+    word_list_objects = ['cars', 'bicycles', 'buses', 'bus', 'fire', 'crosswalks', 'motorcycles', 'stairs', 'lights']
+    for word in word_list_objects:
+        if word in input_string:
+            recherche = word
+    word_list_kind = ['squares', 'images']
+    for kind in word_list_kind:
+        if kind in input_string:
+            tipe = kind
+    return tipe, recherche
+
+def ForLoop(position, len, ImagesRecarder, options):
+    nomImage = ["nom.png"]
+    i = 1
+    print(position)
+    value = options[list(options.keys())[position]] # get the value for the key
+    while i != len:
+        print(options[list(options.keys())[position]])
+        ImagesRecarder[i].save('img' + str(options[list(options.keys())[position]]) + '.png')
+        nomImage.append('img' + str(options[list(options.keys())[position]]) + '.png')
+        i+=1
+        options[list(options.keys())[position]] += 1
+    return  nomImage
+
+def FindIndex(rechercher, options):
+    i = 0
+    for key in options:
+        i += 1
+        if rechercher in key:
+            return i
+    return None  # Return None if the key is not found in the options dictionary
+
+def FindKey(rechercher, options):
+    for key in options:
+        if rechercher in key:
+            return key
+    return None # Return None if the key is not found in the options dictionary
+
+
+def HandleSiSquares(image):
+    pil_image = Image.open(image)
+    pil_image.crop(70 , 142 , 453, 525)

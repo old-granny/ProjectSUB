@@ -1,11 +1,20 @@
 from PrendreScreenShot import RecScreen
-from SepartionImage import imageToNumpyt
-
+from SepartionImage import ImageToSeparation, ImageToDirectories
 
 i = 0
+options = {'squarescars': 0, 'imagescars': 0, 'squaresbicycles': 0, 'imagesbicycles': 0,
+ 'squaresbuses': 0, 'imagesbuses': 0, 'squaresbus': 0, 'imagesbus': 0,
+ 'squaresfire': 0, 'imagesfire': 0, 'squarescrosswalks': 0, 'imagescrosswalks': 0, 'imagesmotorcycles' : 0 , 'squaresmotorcycles' : 0,
+ 'imagesstairs' : 0 , 'squaresstairs' : 0 , 'imageslights' : 0 , 'squareslights' : 0
+
+}
+
+
+
+
 while i <5 :
-    #res, filename = RecScreen(i)
+    res, filename = RecScreen(i)
     if(1 == 1):
-        imageToNumpyt("0.png")
+        filesname , err = ImageToSeparation(filename, options)
         i += 1
         break
