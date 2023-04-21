@@ -1,0 +1,11 @@
+from PrendreScreenShot import RecScreen
+from SepartionImage import imageToNumpyt
+
+
+i = 0
+while i <5 :
+    #res, filename = RecScreen(i)
+    if(1 == 1):
+        imageToNumpyt("0.png")
+        i += 1
+        break

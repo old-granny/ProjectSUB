@@ -1,0 +1,37 @@
+import traceback
+import selenium
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+import time
+import urllib.request
+import requests
+from selenium.webdriver.common.action_chains import ActionChains
+
+from selenium import webdriver
+from selenium.webdriver.common.action_chains import ActionChains
+import time
+
+def RecScreen(nomFichier):
+    try:
+        PATH = '/path/to/chromedriver'  # update this to the correct path
+        driver = webdriver.Chrome(PATH)
+        driver.get("https://patrickhlauke.github.io/recaptcha/")
+        #driver.get("file:///home/kali/Desktop/SelinumProjectCreationDataSet/testingClicking.html")
+
+        actions = ActionChains(driver)
+
+        X = 100
+        Y = 175
+        time.sleep(2.5)
+        actions.move_by_offset(X, Y).click().perform()
+        time.sleep(1)
+
+        filename = str(nomFichier) + ".png"
+        driver.get_screenshot_as_file(filename)
+        driver.quit()
+        return 1, filename
+    except Exception as e:
+        traceback.print_exc()
+        return -1, ""
+
